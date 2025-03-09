@@ -1,0 +1,18 @@
+name = "clicksy"
+compatibility_date = "2025-03-09"
+
+[[kv_namespaces]]
+binding = "CLICKSY"
+id = "a51fdc53ea29470d88101cdf309c527a"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "clicksy"
+database_id = "76da0d3f-15a5-41a1-8ab1-15c07f59ac43"
+
+[[durable_objects.bindings]]
+name = "LIVE_ANALYTICS"
+class_name = "LiveAnalytics"
+
+[durable_objects]
+migrations = [{ tag = "v1", new_classes = ["LiveAnalytics"] }]
