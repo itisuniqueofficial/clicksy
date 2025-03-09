@@ -1,0 +1,33 @@
+name: Deploy to Cloudflare
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Deploy Worker to Cloudflare
+        run: |
+          curl -X PUT "https://api.cloudflare.com/client/v4/accounts/d956086753fcde9320d08320a12db52f/workers/scripts/clicksy" \
+          -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+          -H "Content-Type: application/javascript" \
+          --data-binary @worker.js
+
+      - name: Sync Shortlinks with Cloudflare KV
+        run: |
+          curl -X PUT "https://api.cloudflare.com/client/v4/accounts/d956086753fcde9320d08320a12db52f/storage/kv/namespaces/a51fdc53ea29470d88101cdf309c527a/bulk" \
+          -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          --data-binary @shortlinks.json
+
+      - name: Deploy Frontend to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./frontend
