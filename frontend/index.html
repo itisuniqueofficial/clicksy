@@ -4,20 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clicksy Analytics</title>
-    <script>
-        async function fetchAnalytics(domain) {
-            let url = "/stats";
-            if (domain) url += "?domain=" + encodeURIComponent(domain);
-            let response = await fetch(url);
-            let data = await response.json();
-            document.getElementById("analytics").innerText = JSON.stringify(data, null, 2);
-        }
-    </script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="script.js"></script>
 </head>
 <body>
     <h1>Clicksy Analytics</h1>
-    <input type="text" id="domainInput" placeholder="Enter domain (optional)">
-    <button onclick="fetchAnalytics(document.getElementById('domainInput').value)">Get Stats</button>
-    <pre id="analytics">Loading...</pre>
+    <div class="filters">
+        <input type="text" id="domainInput" placeholder="Filter by domain">
+        <select id="timeRange">
+            <option value="1h">Last 1 Hour</option>
+            <option value="24h">Last 24 Hours</option>
+            <option value="7d">Last 7 Days</option>
+            <option value="30d">Last 30 Days</option>
+        </select>
+        <button onclick="fetchAnalytics()">Refresh Stats</button>
+        <button onclick="exportToCSV()">Export CSV</button>
+    </div>
+    <div class="live-status">Live Updates: <span id="liveCount">0</span> active sessions</div>
+    <table id="statsTable">
+        <thead>
+            <tr>
+                <th>Domain</th>
+                <th>Total Clicks</th>
+                <th>Good</th>
+                <th>Bad</th>
+                <th>Suspicious</th>
+                <th>Avg Resp (ms)</th>
+                <th>Unique Visitors</th>
+                <th>Sessions</th>
+                <th>Countries</th>
+                <th>Devices</th>
+                <th>Sources</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <canvas id="clicksChart" width="400" height="200"></canvas>
 </body>
 </html>
