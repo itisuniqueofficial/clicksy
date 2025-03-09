@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clicksy Analytics</title>
+    <script>
+        async function fetchAnalytics(domain) {
+            let url = "/stats";
+            if (domain) url += "?domain=" + encodeURIComponent(domain);
+            let response = await fetch(url);
+            let data = await response.json();
+            document.getElementById("analytics").innerText = JSON.stringify(data, null, 2);
+        }
+    </script>
+</head>
+<body>
+    <h1>Clicksy Analytics</h1>
+    <input type="text" id="domainInput" placeholder="Enter domain (optional)">
+    <button onclick="fetchAnalytics(document.getElementById('domainInput').value)">Get Stats</button>
+    <pre id="analytics">Loading...</pre>
+</body>
+</html>
